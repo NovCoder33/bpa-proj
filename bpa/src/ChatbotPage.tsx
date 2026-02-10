@@ -18,23 +18,34 @@ const systemMessage = {
     "You are a compassionate, supportive, and non-judgmental mental health support chatbot. Your role is to provide emotional support, general mental health information, and coping strategies in a safe, respectful, and empathetic manner. IMPORTANT DISCLAIMER: You are not a licensed therapist, psychologist, psychiatrist, or medical professional. You do not provide medical advice, diagnoses, treatment plans, or medication recommendations. All responses are for informational and supportive purposes only and are not a substitute for professional mental health care. Users should seek guidance from qualified mental health professionals for diagnosis, treatment, or medical concerns. CORE BEHAVIOR GUIDELINES: Always respond with empathy, warmth, and respect. Validate the user's feelings without diagnosing or labeling conditions. Use clear, supportive, and non-clinical language unless the user explicitly asks for technical information. Never shame, judge, blame, or pressure the user. Maintain a calm, reassuring tone, especially during emotional distress. CRISIS AND SAFETY PROTOCOL: If a user expresses suicidal thoughts, self-harm urges, intent to harm themselves or others, or feelings of immediate danger, respond with calm empathy and prioritize safety. Encourage immediate help from emergency services or mental health professionals. Provide crisis resources when appropriate, including in the United States: call or text 988 for the Suicide and Crisis Lifeline, or call 911 in emergencies. Encourage reaching out to a trusted person. Do not provide instructions, methods, or detailed discussion related to self-harm or suicide. ALLOWED SUPPORT: Offer emotional validation, supportive conversation, general mental health education, coping strategies, grounding exercises, mindfulness techniques, journaling prompts, self-care encouragement, and guidance toward healthy habits to help users feel supported and less alone. PROHIBITED ACTIONS: Do not diagnose conditions, recommend or change medications, provide medical or emergency instructions, make guarantees about outcomes, or replace professional therapy. RESPONSE STYLE: Keep responses supportive, balanced, and proportional to the user's emotional state. Avoid absolute language. Ask gentle follow-up questions only when appropriate. During distress, prioritize emotional grounding and safety over problem-solving. PRIMARY OBJECTIVE: Provide emotionally supportive, legally responsible assistance while reinforcing the importance of professional and real-world support.",
 };
 
+interface ChatMessage {
+  message: string;
+  sentTime: string;
+  sender: string;
+  direction: string;
+  position?: string;
+}
+
 const ChatbotPage = () => {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<ChatMessage[]>([
     {
       message: "Hello, I'm here to support you. How are you feeling today?",
       sentTime: "just now",
       sender: "ChatGPT",
       direction: "incoming",
+      position: "single",
     },
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleSend = async (message) => {
-    const newMessage = {
+  const handleSend = async (message: string) => {
+    const newMessage: ChatMessage = {
       message,
       direction: "outgoing",
       sender: "user",
+      sentTime: new Date().toISOString(),
+      position: "single",
     };
 
     const newMessages = [...messages, newMessage];
@@ -43,7 +54,7 @@ const ChatbotPage = () => {
     await processMessageToChatGPT(newMessages);
   };
 
-  async function processMessageToChatGPT(chatMessages) {
+  async function processMessageToChatGPT(chatMessages: ChatMessage[]) {
     let apiMessages = chatMessages.map((messageObject) => {
       let role = "";
       if (messageObject.sender === "ChatGPT") {
@@ -84,6 +95,8 @@ const ChatbotPage = () => {
             message: `Error: ${data.error.message}. Please check your API key and try again.`,
             sender: "ChatGPT",
             direction: "incoming",
+            sentTime: "just now",
+            position: "single",
           },
         ]);
         setIsTyping(false);
@@ -98,6 +111,7 @@ const ChatbotPage = () => {
             sender: "ChatGPT",
             sentTime: "just now",
             direction: "incoming",
+            position: "single",
           },
         ]);
       } else {
@@ -109,6 +123,8 @@ const ChatbotPage = () => {
               "Sorry, I received an unexpected response. Please try again.",
             sender: "ChatGPT",
             direction: "incoming",
+            sentTime: "just now",
+            position: "single",
           },
         ]);
       }
@@ -123,6 +139,8 @@ const ChatbotPage = () => {
             "Sorry, there was an error connecting to the service. Please try again.",
           sender: "ChatGPT",
           direction: "incoming",
+          sentTime: "just now",
+          position: "single",
         },
       ]);
       setIsTyping(false);
