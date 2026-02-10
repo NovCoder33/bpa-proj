@@ -22,8 +22,8 @@ interface ChatMessage {
   message: string;
   sentTime: string;
   sender: string;
-  direction: string;
-  position?: string;
+  direction: "incoming" | "outgoing";
+  position?: "single" | "first" | "normal" | "last" | 0 | 1 | 2 | 3;
 }
 
 const ChatbotPage = () => {
