@@ -802,12 +802,7 @@ export default function MentalHealthHub() {
       <NavBar />
       <main className="flex-1 max-w-7xl mx-auto px-4 py-8 w-full flex flex-col">
         {activeTab === "home" && <HomePage />}
-        {activeTab === "resources" && (
-          <ResourcesPage
-            disorders={disorders}
-            useScrollReveal={useScrollReveal}
-          />
-        )}
+        {activeTab === "resources" && <ResourcesPage />}
         {activeTab === "helplines" && <HelplinesPage helplines={helplines} />}
         {activeTab === "appointments" && (
           <AppointmentsPage
