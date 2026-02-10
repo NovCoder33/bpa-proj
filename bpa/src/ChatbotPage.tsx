@@ -214,7 +214,7 @@ const ChatbotPage = () => {
                   }
                 >
                   {messages.map((message, i) => {
-                    return <Message key={i} model={message} />;
+                    return <Message key={i} model={message as any} />;
                   })}
                 </MessageList>
                 <MessageInput
